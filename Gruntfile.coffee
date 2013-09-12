@@ -5,9 +5,11 @@ module.exports = (grunt) ->
     copy:
       main:
         expand: true
-        flatten: true
-        src: "build/vendor-library/*"
+        flatten: false
+        cwd: "build/vendor-library/"        
+        src: "**"
         dest: "assets/js/"
+
         
     less:
       development:
