@@ -1,0 +1,12 @@
+{
+  "name": "simple-bower",
+  "version": "0.0.0",
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "jquery-mobile": "1.4.0-alpha.2",
+    "requirejs": "*"
+  },
+    "requirejs": {
+      "js": "require.js"
+    }
+}

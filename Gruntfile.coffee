@@ -2,15 +2,32 @@ module.exports = (grunt) ->
   grunt.initConfig
 
   # setup initial 3rd party assets from various libs
+    bower:
+      install:
+        options:
+          targetDir: "./lib"
+          layout: "byComponent"
+          install: true
+          verbose: true
+          cleanTargetDir: true
+          cleanBowerDir: true
+
+    shell:
+      multiple:
+        command:[
+          'cd lib/jquery-mobile',
+          'npm install',
+          'grunt',          
+        ].join('&&')
+
     copy:
       main:
         expand: true
         flatten: false
-        cwd: "build/vendor-library/"        
+        cwd: "lib/jquery-mobile/dist"        
         src: "**"
         dest: "assets/js/"
-
-        
+    
     less:
       development:
         src: "build/custom/less/jqm-custom.less*"
@@ -46,12 +63,21 @@ module.exports = (grunt) ->
           tasks: ["bake"]
 
 
+  
+  grunt.loadNpmTasks "grunt-contrib-copy"
+  grunt.loadNpmTasks "grunt-shell"
+  grunt.loadNpmTasks "grunt-bower-task"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-less"
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-bake"
+  grunt.loadNpmTasks "grunt-git"
   grunt.loadNpmTasks "grunt-contrib-watch"
 
-  grunt.registerTask "newapp", "copy"
+
+
+  grunt.registerTask "getjqm", "bower"
+  grunt.registerTask "createjqm", "shell"
+  grunt.registerTask "copyjqm", "copy"
   grunt.registerTask "bakeme", "bake"
-  grunt.registerTask "default", "less coffee bake"
+  grunt.registerMultiTask "default", "bower shell copy"
