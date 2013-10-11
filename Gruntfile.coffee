@@ -1,36 +1,68 @@
 module.exports = (grunt) ->
   grunt.initConfig
 
-  # setup initial 3rd party assets from various libs
-    bower:
-      install:
-        options:
-          targetDir: "./lib"
-          layout: "byComponent"
-          install: true
-          verbose: true
-          cleanTargetDir: true
-          cleanBowerDir: true
+   pkg: grunt.file.readJSON('package.json'),
 
+   bower:
+        install:
+          options:
+            targetDir: "pre-build/"
+            layout: "byComponent"
+            install: true
+            verbose: true
+            cleanTargetDir: true
+            cleanBowerDir: true
+
+
+  # need to run the JQM setup command to install necessary node modules for JQM
     shell:
-      multiple:
-        command:[
-          'cd lib/jquery-mobile',
-          'npm install',
-          'grunt',          
+      setupjqmnode:
+        command:['cd pre-build/jquery-mobile',
+          'npm install'
+          'echo source files available'                
         ].join('&&')
 
+  # need to run the JQM build command to get the resources compiled to dist
+      buildjqm:
+        command:['cd pre-build/jquery-mobile',
+          'grunt dist'
+          'echo built the jqm distribution'                
+        ].join('&&')
+
+
+  # copy over our end distribution resources
     copy:
-      main:
+      jqmcss:
         expand: true
         flatten: false
-        cwd: "lib/jquery-mobile/dist"        
-        src: "**"
+        cwd: "pre-build/jquery-mobile/dist"        
+        src: "jquery-mobile-min.css"
+        dest: "assets/css/"
+
+      jqmjs:
+        expand: true
+        flatten: false
+        cwd: "pre-build/jquery-mobile/dist"        
+        src: "jquery-mobile-min.js"
         dest: "assets/js/"
-    
+
+
+    # run a minification process on the jquery file
+
+    uglify:
+      options:
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> -' + 
+        '<%= grunt.template.today("yyyy-mm-dd") %> */'
+        report: "min"
+
+      jquery:
+        src: ["pre-build/jquery/jquery.js"]
+        dest: "assets/js/jquery-min.js"
+
+        
     less:
       development:
-        src: "build/custom/less/jqm-custom.less*"
+        src: "resources/custom/less/jqm-custom.less*"
         dest: "assets/css/jqm-custom.css"
         options:
           compress: false
@@ -39,45 +71,56 @@ module.exports = (grunt) ->
 
     coffee:
       allcoffee:
-        src: "build/custom/coffee/*.coffee"
+        src: "resources/custom/coffee/*.coffee"
         dest: "assets/js/app.js"
         options:
           join: true         
 
      bake:
-        build: 
-          files: "index.html":"build/custom/components/base.html"
+        resources: 
+          files: "index.html":"resources/custom/components/base.html"
 
   # lets watch all the stuff going on for live changes.
      watch:
         less:
-          files: ["build/custom/less/**/*.less"] 
+          files: ["resources/custom/less/**/*.less"] 
           tasks: ["less"]
 
         coffee:
-          files: ["build/custom/coffee/**/*.coffee"]
+          files: ["resources/custom/coffee/**/*.coffee"]
           tasks: ["coffee"]
 
         bake:
-          files: ["build/custom/components/**"]
+          files: ["resources/custom/components/**"]
           tasks: ["bake"]
 
 
-  
-  grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-shell"
-  grunt.loadNpmTasks "grunt-bower-task"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-less"
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-bake"
-  grunt.loadNpmTasks "grunt-git"
   grunt.loadNpmTasks "grunt-contrib-watch"
-
-
-
-  grunt.registerTask "getjqm", "bower"
-  grunt.registerTask "createjqm", "shell"
-  grunt.registerTask "copyjqm", "copy"
+  grunt.loadNpmTasks "grunt-bower-task"
+  grunt.loadNpmTasks "grunt-contrib-uglify"
+  grunt.registerTask "newapp", "copy"
   grunt.registerTask "bakeme", "bake"
-  grunt.registerMultiTask "default", "bower shell copy"
+  grunt.registerTask "default", "less coffee bake"
+
+
+  grunt.registerTask('get-jqm', ['bower:install']);
+
+  grunt.registerTask('setup-jquery', ['uglify:jquery']);
+
+  grunt.registerTask('setup-jqm-node', ['shell:setupjqmnode']);
+
+  grunt.registerTask('build-jqm', ['shell:buildjqm']);
+
+  grunt.registerTask('build-jqm-css', ['copy:jqmcss']);
+
+  grunt.registerTask('build-jqm-js', ['copy:jqmjs']);
+
+# Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
+  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'default']);
+
+  grunt.registerTask('default', ['watch']);
