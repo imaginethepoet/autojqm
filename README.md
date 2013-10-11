@@ -1,10 +1,17 @@
 
 autojqm
-jqm: version 1.4alpha2
+jqm: version 2.0
 
 grunt plugins used:
 https://npmjs.org/package/grunt-bake
 animo.js - 
+
+I rewrote 90% -better instructions coming - essentially this is an all
+in one build jquery mobile app. You just type grunt setup-jqm and it
+grabs the latest (beta version of jqm) dependencies,extracts, builds,
+copies over files to the assets, directory - to top it off this uses
+bake to automagically watch and build your index.html from components!
+
 
 
 INSTRUCTIONS:
