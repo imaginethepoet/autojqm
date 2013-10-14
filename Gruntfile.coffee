@@ -34,16 +34,16 @@ module.exports = (grunt) ->
     copy:
       jqmcss:
         expand: true
-        flatten: false
-        cwd: "pre-build/jquery-mobile/dist"        
-        src: "jquery-mobile-min.css"
+        flatten: true
+        cwd: "pre-build/jquery-mobile/dist/"        
+        src: "jquery.mobile.min.css"
         dest: "assets/css/"
 
       jqmjs:
         expand: true
-        flatten: false
+        flatten: true
         cwd: "pre-build/jquery-mobile/dist"        
-        src: "jquery-mobile-min.js"
+        src: "jquery.mobile.min.js"
         dest: "assets/js/"
 
 
