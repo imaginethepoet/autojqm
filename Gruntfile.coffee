@@ -80,6 +80,16 @@ module.exports = (grunt) ->
         resources: 
           files: "index.html":"resources/custom/components/base.html"
 
+
+  # lets start up a headless websever with node and connect
+      connect:
+        server:
+          options:
+            port:9001
+            base:''
+
+
+
   # lets watch all the stuff going on for live changes.
      watch:
         less:
@@ -103,6 +113,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-bower-task"
   grunt.loadNpmTasks "grunt-contrib-uglify"
+  grunt.loadNpmTasks "grunt-contrib-connect"
+
+
+
   grunt.registerTask "newapp", "copy"
   grunt.registerTask "bakeme", "bake"
   grunt.registerTask "default", "less coffee bake"
@@ -123,4 +137,4 @@ module.exports = (grunt) ->
 # Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
   grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'default']);
 
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['connect', 'watch']);

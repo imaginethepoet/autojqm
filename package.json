@@ -1,6 +1,6 @@
 {
   "name": "JQMAUTOV1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A quick rapid mobile app framework  and build script",
   "author": "Preston McCauley",
   "repository":{
@@ -20,6 +20,7 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-text-replace": "~0.3.7",    
     "grunt-shell": "~0.3.1",
+    "grunt-contrib-connect": "~0.5.0",
     "grunt-bake": "~0.2.1",
     "grunt-contrib-less": "~0.7.0"
   },
