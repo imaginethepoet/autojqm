@@ -30,6 +30,22 @@ module.exports = (grunt) ->
         ].join('&&')
 
 
+  # rename JQM css files to my liking
+      renamecss:
+        command:['cd assets/css/',
+          'ren  jquery.mobile.min.css jquery-mobile-min.css '
+          'echo css JQM files renamed'                
+        ].join('&&')
+
+
+  # rename JQM JS files to my liking
+      renamejs:
+        command:['cd assets/js',
+          'ren jquery.mobile.min.js jquery-mobile-min.js '
+          'echo js JQM files renamed'                
+        ].join('&&')
+
+
   # copy over our end distribution resources
     copy:
       jqmcss:
@@ -85,7 +101,8 @@ module.exports = (grunt) ->
       connect:
         server:
           options:
-            port:9001
+            protocol:'http'
+            port:8000
             base:''
 
 
@@ -134,7 +151,12 @@ module.exports = (grunt) ->
 
   grunt.registerTask('build-jqm-js', ['copy:jqmjs']);
 
+  grunt.registerTask('rename-jqm-css', ['shell:renamecss']);
+
+  grunt.registerTask('rename-jqm-js', ['shell:renamejs']);
+
+
 # Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
-  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'default']);
+  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'rename-jqm-css', 'rename-jqm-js', 'default']);
 
   grunt.registerTask('default', ['connect', 'watch']);
