@@ -4,6 +4,7 @@
   "directory": "packages",
   "dependencies": {
     "jquery": "~1.10.2",
-    "jquery-mobile": "~1.4.0-beta.1"
+    "jquery-mobile": "~1.4.0-beta.1",
+    "backbone": "~1.1"
   }
 }

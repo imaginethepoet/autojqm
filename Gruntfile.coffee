@@ -62,6 +62,13 @@ module.exports = (grunt) ->
         src: "jquery.mobile.min.js"
         dest: "assets/js/"
 
+      backbonejs:
+        expand: true
+        flatten: true
+        cwd: "pre-build/backbone/dist"        
+        src: "backbone.min.js"
+        dest: "assets/js/"
+
 
     # run a minification process on the jquery file
 
@@ -105,6 +112,16 @@ module.exports = (grunt) ->
             port:8000
             base:''
 
+
+      phonegap: 
+        config: 
+          root: ''
+          config: 'www/config.xml'
+          cordova: '.cordova'
+          path: 'phonegap'
+          plugins: ['/local/path/to/plugin', 'http://example.com/path/to/plugin.git']
+          platforms: ['ios']
+          verbose: false
 
 
   # lets watch all the stuff going on for live changes.
@@ -151,12 +168,16 @@ module.exports = (grunt) ->
 
   grunt.registerTask('build-jqm-js', ['copy:jqmjs']);
 
+  grunt.registerTask('build-backbone-js', ['copy:backbonejs']);
+
   grunt.registerTask('rename-jqm-css', ['shell:renamecss']);
 
   grunt.registerTask('rename-jqm-js', ['shell:renamejs']);
 
+  grunt.registerTask('build-phonegap', ['phonegap']);
+
 
 # Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
-  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'rename-jqm-css', 'rename-jqm-js', 'default']);
+  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js' 'rename-jqm-css', 'rename-jqm-js', 'default']);
 
   grunt.registerTask('default', ['connect', 'watch']);
