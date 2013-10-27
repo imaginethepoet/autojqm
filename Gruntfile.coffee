@@ -29,6 +29,21 @@ module.exports = (grunt) ->
           'echo built the jqm distribution'                
         ].join('&&')
 
+  # phonegap project creation commands part 1
+      createphonegapproject:
+        command:['sudo npm install -g phonegap',
+          'phonegap create demoapp'
+          'echo phonegap project built'                
+        ].join('&&')
+
+
+  # phonegap project creation commands part 2
+      createiosbuild:
+        command:['cd demoapp',
+          'phonegap run ios'
+          'echo creating the IOS package'                
+        ].join('&&')
+
 
   # rename JQM css files to my liking
       renamecss:
@@ -68,6 +83,23 @@ module.exports = (grunt) ->
         cwd: "pre-build/backbone"        
         src: "backbone-min.js"
         dest: "assets/js/"
+
+   # move all assets out to app directory for pre-build
+
+      phonegapassetcopy:
+        expand: true
+        flatten: false 
+        cwd: "assets"      
+        src: "**"
+        dest: "demoapp/www/"
+
+
+      phonegapindexcopy:
+        expand: true
+        flatten: false 
+        cwd: ""      
+        src: "index.html"
+        dest: "demoapp/www/"
 
 
     # run a minification process on the jquery file
@@ -113,17 +145,6 @@ module.exports = (grunt) ->
             base:''
 
 
-      phonegap: 
-        config: 
-          root: ''
-          config: 'www/config.xml'
-          cordova: '.cordova'
-          path: 'phonegap'
-          plugins: ['/local/path/to/plugin', 'http://example.com/path/to/plugin.git']
-          platforms: ['ios']
-          verbose: false
-
-
   # lets watch all the stuff going on for live changes.
      watch:
         less:
@@ -136,7 +157,8 @@ module.exports = (grunt) ->
 
         bake:
           files: ["resources/custom/components/**"]
-          tasks: ["bake"]
+          tasks: ['bake', 'move-assets', 'move-index-asset', 'build-ios-project']
+
 
 
   grunt.loadNpmTasks "grunt-shell"
@@ -151,8 +173,11 @@ module.exports = (grunt) ->
 
 
 
+
   grunt.registerTask "newapp", "copy"
   grunt.registerTask "bakeme", "bake"
+ 
+
   grunt.registerTask "default", "less coffee bake"
 
 
@@ -174,10 +199,20 @@ module.exports = (grunt) ->
 
   grunt.registerTask('rename-jqm-js', ['shell:renamejs']);
 
-  grunt.registerTask('build-phonegap', ['phonegap']);
+  grunt.registerTask('create-phonegap', ['shell:createphonegapproject']);
+
+  grunt.registerTask('move-assets', ['copy:phonegapassetcopy']);
+
+  grunt.registerTask('move-index-asset', ['copy:phonegapindexcopy']);
+
+
+
+
+  grunt.registerTask('build-ios-project', ['shell:createiosbuild']);
+
 
 
 # Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
-  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js','rename-jqm-css', 'rename-jqm-js', 'default']);
+  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js','rename-jqm-css', 'rename-jqm-js', 'create-phonegap', 'move-assets', 'build-ios-project' ,'default']);
 
   grunt.registerTask('default', ['connect', 'watch']);
