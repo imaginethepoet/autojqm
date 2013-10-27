@@ -102,6 +102,26 @@ module.exports = (grunt) ->
         dest: "demoapp/www/"
 
 
+  #string replace to update our appname in config file
+
+    replace:
+      phonegapconfig1:
+        src: ["demoapp/www/config.xml"]
+        overwrite: true # overwrite matched source files
+        replacements: [
+          from: 'com.phonegap.helloworld'
+          to: 'com.phonegap.demoapp'
+        ]
+
+      phonegapconfig2:
+        src: ["demoapp/www/config.xml"]
+        overwrite: true # overwrite matched source files
+        replacements: [
+          from: '<name>HelloWorld</name>'
+          to: '<name>DemoApp</name>'
+        ]
+
+
     # run a minification process on the jquery file
 
     uglify:
@@ -170,7 +190,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-bower-task"
   grunt.loadNpmTasks "grunt-contrib-uglify"
   grunt.loadNpmTasks "grunt-contrib-connect"
-
+  grunt.loadNpmTasks "grunt-text-replace"
 
 
 
@@ -205,6 +225,8 @@ module.exports = (grunt) ->
 
   grunt.registerTask('move-index-asset', ['copy:phonegapindexcopy']);
 
+  grunt.registerTask('phonegapconfig1', ['replace:phonegapconfig1']);  
+  grunt.registerTask('phonegapconfig2', ['replace:phonegapconfig2']);  
 
 
 
@@ -213,6 +235,6 @@ module.exports = (grunt) ->
 
 
 # Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
-  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js','rename-jqm-css', 'rename-jqm-js', 'create-phonegap', 'move-assets', 'build-ios-project' ,'default']);
+  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js','rename-jqm-css', 'rename-jqm-js', 'create-phonegap', 'move-assets', 'phonegapconfig1', 'phonegapconfig1', 'build-ios-project' ,'default']);
 
   grunt.registerTask('default', ['connect', 'watch']);
