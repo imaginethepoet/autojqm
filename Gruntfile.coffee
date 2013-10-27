@@ -65,8 +65,8 @@ module.exports = (grunt) ->
       backbonejs:
         expand: true
         flatten: true
-        cwd: "pre-build/backbone/dist"        
-        src: "backbone.min.js"
+        cwd: "pre-build/backbone"        
+        src: "backbone-min.js"
         dest: "assets/js/"
 
 
@@ -178,6 +178,6 @@ module.exports = (grunt) ->
 
 
 # Tak setups and runs the install grunt command for JQM package, setups all the assets, and then fires the watch command start coding.
-  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js' 'rename-jqm-css', 'rename-jqm-js', 'default']);
+  grunt.registerTask('setup-jqm', ['get-jqm', 'setup-jquery', 'setup-jqm-node', 'build-jqm',  'build-jqm-css', 'build-jqm-js', 'build-backbone-js','rename-jqm-css', 'rename-jqm-js', 'default']);
 
   grunt.registerTask('default', ['connect', 'watch']);
